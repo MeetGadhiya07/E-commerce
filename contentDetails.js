@@ -122,7 +122,7 @@ let httpRequest = new XMLHttpRequest();
         dynamicContentDetails(contentDetails);
       }
     } else {
-      console.log("not connected!");
+      console.log("not  connected!");
     }
   };
 }
