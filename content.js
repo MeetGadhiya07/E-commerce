@@ -1,57 +1,48 @@
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
   let contentTitle;
 
   function populateBrandSelect(products) {
-    let brandSelect = document.getElementById("brandSelect");
+    let brandSelect = $("#brandSelect");
 
     let brands = [];
-    products.forEach(function (product) {
+    $.each(products, function (index, product) {
       if (!brands.includes(product.brand)) {
         brands.push(product.brand);
       }
     });
 
-    brands.forEach(function (brand) {
-      let option = document.createElement("option");
-      option.text = brand;
-      brandSelect.add(option);
+    $.each(brands, function (index, brand) {
+      let option = $("<option></option>").text(brand);
+      brandSelect.append(option);
     });
   }
 
   function dynamicClothingSection(ob) {
-    console.log("ob ===>", ob);
-    let boxDiv = document.createElement("div");
-    boxDiv.id = "box";
+    let boxDiv = $("<div></div>").attr("id", "box");
 
-    let boxLink = document.createElement("a");
-    boxLink.href = "/contentDetails.html?" + ob.id;
+    let boxLink = $("<a></a>").attr("href", "/contentDetails.html?" + ob.id);
 
-    let imgTag = document.createElement("img");
-    imgTag.src = ob.image;
-    imgTag.style.width = "100%";
-    imgTag.style.height = "250px";
+    let imgTag = $("<img>")
+      .attr("src", ob.image)
+      .css("width", "90%")
+      .css("height", "250px")
+      .css("marginLeft", "5%")
+      .css("marginTop", "5%");
 
-    let detailsDiv = document.createElement("div");
-    detailsDiv.id = "details";
+    let detailsDiv = $("<div></div>").attr("id", "details");
 
-    let h3 = document.createElement("h3");
-    let h3Text = document.createTextNode(ob.title);
-    h3.appendChild(h3Text);
+    let truncatedTitle =
+      ob.title.length > 20 ? ob.title.substring(0, 20) + "..." : ob.title;
+    let h3 = $("<h3></h3>").text(truncatedTitle).css("font-size", "19px");
+    let h4 = $("<h4></h4>").text(ob.category);
+    let h2 = $("<h2></h2>").text("Rs " + ob.price);
 
-    let h4 = document.createElement("h4");
-    let h4Text = document.createTextNode(ob.category);
-    h4.appendChild(h4Text);
-
-    let h2 = document.createElement("h2");
-    let h2Text = document.createTextNode("Rs " + ob.price);
-    h2.appendChild(h2Text);
-
-    boxDiv.appendChild(boxLink);
-    boxLink.appendChild(imgTag);
-    boxLink.appendChild(detailsDiv);
-    detailsDiv.appendChild(h3);
-    detailsDiv.appendChild(h4);
-    detailsDiv.appendChild(h2);
+    boxDiv.append(boxLink);
+    boxLink.append(imgTag);
+    boxLink.append(detailsDiv);
+    detailsDiv.append(h3);
+    detailsDiv.append(h4);
+    detailsDiv.append(h2);
 
     return boxDiv;
   }
@@ -63,46 +54,44 @@ document.addEventListener("DOMContentLoaded", function () {
     return filteredProducts;
   }
 
-  let mainContainer = document.getElementById("mainContainer");
-  let containerClothing = document.getElementById("containerClothing");
-  let containerAccessories = document.getElementById("containerAccessories");
+  let mainContainer = $("#mainContainer");
+  let containerClothing = $("#containerClothing");
+  let containerAccessories = $("#containerAccessories");
 
-  let brandSelect = document.getElementById("brandSelect");
-  brandSelect.addEventListener("change", function () {
-    let selectedBrand = this.value;
+  $("#brandSelect").on("change", function () {
+    let selectedBrand = $(this).val();
     let filteredProducts = filterByBrand(contentTitle, selectedBrand);
 
-    containerClothing.innerHTML = "";
-    containerAccessories.innerHTML = "";
+    containerClothing.html("");
+    containerAccessories.html("");
 
-    filteredProducts.forEach(function (product) {
+    $.each(filteredProducts, function (index, product) {
       if (product.isAccessory) {
-        containerAccessories.appendChild(dynamicClothingSection(product));
+        containerAccessories.append(dynamicClothingSection(product));
       } else {
-        containerClothing.appendChild(dynamicClothingSection(product));
+        containerClothing.append(dynamicClothingSection(product));
       }
     });
   });
 
-  let httpRequest = new XMLHttpRequest();
-  httpRequest.onreadystatechange = function () {
-    if (this.readyState === 4) {
-      if (this.status == 200) {
-        contentTitle = JSON.parse(this.responseText);
-        populateBrandSelect(contentTitle);
+  $.ajax({
+    url: "https://fakestoreapi.com/products",
+    method: "GET",
+    dataType: "json",
+    success: function (data) {
+      contentTitle = data;
+      populateBrandSelect(contentTitle);
 
-        contentTitle.forEach(function (product) {
-          if (product.isAccessory) {
-            containerAccessories.appendChild(dynamicClothingSection(product));
-          } else {
-            containerClothing.appendChild(dynamicClothingSection(product));
-          }
-        });
-      } else {
-        console.log("call failed!");
-      }
-    }
-  };
-  httpRequest.open("GET", "https://fakestoreapi.com/products", true);
-  httpRequest.send();
+      $.each(contentTitle, function (index, product) {
+        if (product.isAccessory) {
+          containerAccessories.append(dynamicClothingSection(product));
+        } else {
+          containerClothing.append(dynamicClothingSection(product));
+        }
+      });
+    },
+    error: function (error) {
+      console.error("Fetch error:", error);
+    },
+  });
 });
