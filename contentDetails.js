@@ -1,79 +1,70 @@
 $(document).ready(function () {
-  let id = location.search.split("?")[1];
+  const id = location.search.split("?")[1];
+  const badge = $("#badge");
 
-  if (document.cookie.indexOf(",counter=") >= 0) {
-    let counter = document.cookie.split(",")[1].split("=")[1];
-    $("#badge").html(counter);
+  function updateBadge(counter) {
+    badge.html(counter);
   }
 
-  function dynamicContentDetails(ob) {
-    let mainContainer = $("<div>").attr("id", "containerD");
-    $("#containerProduct").append(mainContainer);
-
-    let imageSectionDiv = $("<div>").attr("id", "imageSection");
-    let imgTag = $("<img>").attr("id", "imgDetails").attr("src", ob.image);
-    imageSectionDiv.append(imgTag);
-
-    let productDetailsDiv = $("<div>").attr("id", "productDetails");
-    let h1 = $("<h1>").text(ob.title);
-    let h4 = $("<h4>").text(ob.category);
-
-    let detailsDiv = $("<div>").attr("id", "details");
-    let h3DetailsDiv = $("<h3>").text("Rs " + ob.price);
-    let h3 = $("<h3>").text("Description");
-    let para = $("<p>").text(ob.description);
-
-    let productPreviewDiv = $("<div>").attr("id", "productPreview");
-    let h3ProductPreviewDiv = $("<h3>").text("Product Preview");
-    productPreviewDiv.append(h3ProductPreviewDiv);
-
-    let buttonDiv = $("<div>").attr("id", "button");
-    let buttonTag = $("<button>").text("Add to Cart");
-    buttonTag.click(function () {
-      let order = id + " ";
-      let counter = 1;
-      if (document.cookie.indexOf(",counter=") >= 0) {
-        order = id + " " + document.cookie.split(",")[0].split("=")[1];
-        counter = Number(document.cookie.split(",")[1].split("=")[1]) + 1;
-      }
-      document.cookie = "orderId=" + order + ",counter=" + counter;
-      $("#badge").html(counter);
-      console.log(document.cookie);
-    });
-    buttonDiv.append(buttonTag);
-
-    mainContainer.append(imageSectionDiv);
-    mainContainer.append(productDetailsDiv);
-    productDetailsDiv.append(h1);
-    productDetailsDiv.append(h4);
-    productDetailsDiv.append(detailsDiv);
-    detailsDiv.append(h3DetailsDiv);
-    detailsDiv.append(h3);
-    detailsDiv.append(para);
-    productDetailsDiv.append(productPreviewDiv);
-    productDetailsDiv.append(buttonDiv);
-
-    return mainContainer;
+  function getCookieValue(cookieName) {
+    const cookie = document.cookie
+      .split(";")
+      .find((cookie) => cookie.includes(cookieName));
+    return cookie ? parseInt(cookie.split("=")[1]) : 0;
   }
 
-  // BACKEND CALLING
+  function addToCart() {
+    const existingOrderId = getCookieValue("orderId");
+    const existingCounter = getCookieValue("counter");
+    const order = existingOrderId ? `${id} ${existingOrderId}` : id;
+    const counter = existingCounter ? existingCounter + 1 : 1;
 
-  let httpRequest = new XMLHttpRequest();
-  {
-    httpRequest.onreadystatechange = function () {
-      if (this.readyState === 4 && this.status == 200) {
+    document.cookie = `orderId=${order}; counter=${counter}`;
+    updateBadge(counter);
+    console.log(document.cookie);
+  }
+
+  function createProductDetails(contentDetails) {
+    const { title, category, price, description, image } = contentDetails;
+
+    return `
+      <div id="containerD">
+        <div id="imageSection">
+          <img id="imgDetails" src="${image}">
+        </div>
+        <div id="productDetails">
+          <h1>${title}</h1>
+          <h4>${category}</h4>
+          <div id="details">
+            <h3>Rs ${price}</h3>
+            <h3>Description</h3>
+            <p>${description}</p>
+          </div>
+          <div id="button">
+            <button>Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function fetchProductDetails(id) {
+    fetch(`https://fakestoreapi.com/products/${id}`)
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((contentDetails) => {
         console.log("connected!!");
-        let contentDetails = JSON.parse(this.responseText);
-        {
-          console.log(contentDetails);
-          dynamicContentDetails(contentDetails);
-        }
-      } else {
-        console.log("not connected!");
-      }
-    };
+        console.log(contentDetails);
+        $("#containerProduct").append(createProductDetails(contentDetails));
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
   }
 
-  httpRequest.open("GET", "https://fakestoreapi.com/products/" + id, true);
-  httpRequest.send();
+  fetchProductDetails(id);
+
+  $("#containerProduct").on("click", "#button button", addToCart);
 });

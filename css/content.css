@@ -2,16 +2,8 @@ body {
   margin: 0;
   font-family: "Lato", sans-serif;
 }
-h1 {
-  width: 90%;
-  margin: auto;
-  padding: 50px 0;
-  letter-spacing: 2px;
-  font-weight: 700;
-  text-transform: capitalize;
-}
-#containerClothing,
-#containerAccessories {
+
+#allProducts {
   display: grid;
   grid-gap: 70px 20px;
   grid-template-columns: repeat(5, 1fr);
@@ -19,6 +11,7 @@ h1 {
   margin: auto;
   padding-bottom: 40px;
 }
+
 #box {
   width: 100%;
   background-color: white;
@@ -29,7 +22,7 @@ h1 {
 #box:hover {
   box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
 }
-#containerClothing img {
+#allProducts img {
   width: 100%;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -63,7 +56,7 @@ h2 {
   h1 {
     font-size: 25px;
   }
-  #containerClothing,
+  #allProducts,
   #containerAccessories {
     width: 95%;
     grid-gap: 10px;
@@ -73,7 +66,7 @@ h2 {
   h1 {
     width: 80%;
   }
-  #containerClothing,
+  #allProducts,
   #containerAccessories {
     display: grid;
     grid-gap: 70px 20px;
@@ -88,7 +81,7 @@ h2 {
   h1 {
     width: 90%;
   }
-  #containerClothing,
+  #allProducts,
   #containerAccessories {
     width: 90%;
   }
@@ -97,7 +90,7 @@ h2 {
   h1 {
     width: 70%;
   }
-  #containerClothing,
+  #allProducts,
   #containerAccessories {
     width: 70%;
   }
@@ -106,7 +99,7 @@ h2 {
   h1 {
     width: 80%;
   }
-  #containerClothing,
+  #allProducts,
   #containerAccessories {
     width: 80%;
     grid-template-columns: repeat(2, 1fr);
@@ -120,4 +113,81 @@ h2 {
 }
 #brandSelect {
   padding: 10px;
+}
+
+.product-title {
+  padding-top: 3rem;
+  padding-bottom: 1.5rem;
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-filter {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.product-filter select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: inherit;
+  box-shadow: none;
+}
+
+.product-filter select::-ms-expand {
+  display: none;
+}
+
+.product-filter .select {
+  position: relative;
+  display: flex;
+  width: 200px;
+  box-shadow: 1px 2px 6px 2px rgb(219, 219, 219);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.product-filter .select select {
+  flex: 1;
+  padding: 1em;
+  cursor: pointer;
+}
+.product-filter .select::after {
+  content: "▼";
+  position: absolute;
+  right: 1rem;
+  top: 11px;
+  transition: 0.25s all ease;
+  pointer-events: none;
+}
+.product-filter .select:hover::after {
+  color: black;
+  -webkit-animation: bounce 0.5s infinite;
+  animation: bounce 0.5s infinite;
+}
+
+@-webkit-keyframes bounce {
+  25% {
+    transform: translatey(5px);
+  }
+  75% {
+    transform: translatey(-5px);
+  }
+}
+
+@keyframes bounce {
+  25% {
+    transform: translatey(5px);
+  }
+  75% {
+    transform: translatey(-5px);
+  }
 }

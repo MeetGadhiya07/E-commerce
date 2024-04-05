@@ -20,18 +20,25 @@
     <link rel="stylesheet" href="css/content.css" />
   </head>
   <body>
-    <!-- Brand filter -->
-    <div id="brandSelectContainer">
-      <select id="brandSelect">
-        <option value="">All Brands</option>
-      </select>
-    </div>
-
     <div id="mainContainer">
-      <h1>Products</h1>
-      <div id="containerClothing">
-        <!-- Rendered clothing items will be added here -->
+      <div class="product-title">
+        <h1>Products</h1>
+        <div class="product-filter">
+          <label class="select">
+            <select name="filter" id="categoryFilter">
+              <option value=""></option>
+            </select>
+          </label>
+          <label class="select">
+            <select name="sort" id="pricingSort">
+              <option value=""></option>
+            </select>
+          </label>
+        </div>
       </div>
+
+      <!-- product render  -->
+      <div id="allProducts"></div>
     </div>
 
     <script src="content.js"></script>
