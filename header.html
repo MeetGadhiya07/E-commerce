@@ -23,40 +23,38 @@
   <body>
     <header>
       <section>
-        <!-- MAIN CONTAINER -->
-        <div id="container">
-          <!-- SHOP NAME -->
+        <div id="header-container">
           <div id="shopName">
-            <a href="index.html"> <b>SHOP</b>LANE </a>
+            <a href="index.html" class="brand-logo">
+              <img src="img/logo.png" width="50px" /> <span><b>T</b>help</span>
+            </a>
           </div>
-          <!-- COLLECTION ON WEBSITE -->
-          <div id="collection">
-            <div id="clothing"><a href="/"> CLOTHING </a></div>
-            <div id="accessories">
-              <a href="/"> ACCESSORIES </a>
+
+          <div class="search-container">
+            <div id="search" class="search-content">
+              <i class="fas fa-search search"></i>
+              <input
+                type="text"
+                id="searchInput"
+                class="searchBar"
+                name="searchBox"
+                placeholder="Search for Clothing and Accessories"
+              />
+              <div id="products-container" class="search-result"></div>
             </div>
-          </div>
-          <!-- SEARCH SECTION -->
-          <div id="search">
-            <i class="fas fa-search search"></i>
-            <input
-              type="text"
-              id="input"
-              name="searchBox"
-              placeholder="Search for Clothing and Accessories"
-            />
-          </div>
-          <!-- USER SECTION (CART AND USER ICON) -->
-          <div id="user">
-            <a href="cart.html">
-              <i class="fas fa-shopping-cart addedToCart"
-                ><div id="badge">0</div></i
-              ></a
-            >
-            <a href="#"> <i class="fas fa-user-circle userIcon"></i> </a>
+            <div id="user">
+              <a href="cart.html">
+                <i class="fas fa-shopping-cart addedToCart"
+                  ><div id="badge">0</div></i
+                >
+              </a>
+              <a href="#"> <i class="fas fa-user-circle userIcon"></i> </a>
+            </div>
           </div>
         </div>
       </section>
     </header>
+
+    <script src="header.js"></script>
   </body>
 </html>

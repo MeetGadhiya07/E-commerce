@@ -50,61 +50,6 @@ h2 {
   color: rgb(3, 94, 94);
 }
 
-/* ----------------------------- MEDIA QUERY --------------------------- */
-
-@media (max-width: 1070px) {
-  h1 {
-    font-size: 25px;
-  }
-  #allProducts,
-  #containerAccessories {
-    width: 95%;
-    grid-gap: 10px;
-  }
-}
-@media (max-width: 850px) {
-  h1 {
-    width: 80%;
-  }
-  #allProducts,
-  #containerAccessories {
-    display: grid;
-    grid-gap: 70px 20px;
-    grid-template-columns: repeat(3, 1fr);
-    width: 80%;
-  }
-}
-@media (max-width: 650px) {
-  h1 {
-    font-size: 20px;
-  }
-  h1 {
-    width: 90%;
-  }
-  #allProducts,
-  #containerAccessories {
-    width: 90%;
-  }
-}
-@media (max-width: 600px) {
-  h1 {
-    width: 70%;
-  }
-  #allProducts,
-  #containerAccessories {
-    width: 70%;
-  }
-}
-@media (max-width: 505px) {
-  h1 {
-    width: 80%;
-  }
-  #allProducts,
-  #containerAccessories {
-    width: 80%;
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 #brandSelectContainer {
   position: absolute;
   right: 0;
@@ -123,6 +68,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-direction: row;
 }
 
 .product-filter {
@@ -189,5 +135,67 @@ h2 {
   }
   75% {
     transform: translatey(-5px);
+  }
+}
+
+/* ----------------------------- MEDIA QUERY --------------------------- */
+
+@media (max-width: 1070px) {
+  h1 {
+    font-size: 25px;
+  }
+  #allProducts,
+  #containerAccessories {
+    width: 95%;
+    grid-gap: 10px;
+  }
+}
+@media (max-width: 850px) {
+  h1 {
+    width: 80%;
+  }
+  #allProducts,
+  #containerAccessories {
+    display: grid;
+    grid-gap: 70px 20px;
+    grid-template-columns: repeat(3, 1fr);
+    width: 80%;
+  }
+}
+@media (max-width: 650px) {
+  h1 {
+    font-size: 20px;
+  }
+  h1 {
+    width: 90%;
+  }
+  #allProducts,
+  #containerAccessories {
+    width: 90%;
+  }
+  .product-title {
+    flex-direction: column;
+  }
+  .product-filter .select {
+    width: 150px;
+  }
+}
+@media (max-width: 600px) {
+  h1 {
+    width: 70%;
+  }
+  #allProducts,
+  #containerAccessories {
+    width: 70%;
+  }
+}
+@media (max-width: 505px) {
+  h1 {
+    width: 80%;
+  }
+  #allProducts,
+  #containerAccessories {
+    width: 80%;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
