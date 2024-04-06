@@ -13,17 +13,30 @@ $(document).ready(function () {
     return cookie ? parseInt(cookie.split("=")[1]) : 0;
   }
 
-  function addToCart() {
-    const existingOrderId = getCookieValue("orderId");
-    const existingCounter = getCookieValue("counter");
-    const order = existingOrderId ? `${id} ${existingOrderId}` : id;
-    const counter = existingCounter ? existingCounter + 1 : 1;
-
-    document.cookie = `orderId=${order}; counter=${counter}`;
-    updateBadge(counter);
-    console.log(document.cookie);
+  function addToCart(contentDetails) {
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || {};
+    const productId = location.search.split("?")[1];
+    
+    // Check if the product already exists in the cart
+    if (existingCart[productId]) {
+      // If it exists, increase the quantity
+      existingCart[productId].quantity += 1;
+    } else {
+      // If it doesn't exist, add it as a new item with quantity 1
+      const cartItem = {
+        id: productId,
+        details: contentDetails,
+        quantity: 1
+      };
+      existingCart[productId] = cartItem;
+    }
+    
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+    updateBadge();
+    console.log(existingCart);
   }
-
+  
+  
   function createProductDetails(contentDetails) {
     const { title, category, price, description, image } = contentDetails;
 
@@ -57,6 +70,7 @@ $(document).ready(function () {
       .then((contentDetails) => {
         console.log("connected!!");
         console.log(contentDetails);
+        localStorage.setItem("contentDetails", JSON.stringify(contentDetails));
         $("#containerProduct").append(createProductDetails(contentDetails));
       })
       .catch((error) => {
@@ -66,5 +80,18 @@ $(document).ready(function () {
 
   fetchProductDetails(id);
 
-  $("#containerProduct").on("click", "#button button", addToCart);
+  $("#containerProduct").on("click", "#button button", function () {
+    const productId = location.search.split("?")[1];
+    fetch(`https://fakestoreapi.com/products/${productId}`)
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((contentDetails) => {
+        addToCart(contentDetails);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+  });
 });
