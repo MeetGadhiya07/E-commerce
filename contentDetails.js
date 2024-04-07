@@ -16,27 +16,23 @@ $(document).ready(function () {
   function addToCart(contentDetails) {
     const existingCart = JSON.parse(localStorage.getItem("cart")) || {};
     const productId = location.search.split("?")[1];
-    
-    // Check if the product already exists in the cart
+
     if (existingCart[productId]) {
-      // If it exists, increase the quantity
       existingCart[productId].quantity += 1;
     } else {
-      // If it doesn't exist, add it as a new item with quantity 1
       const cartItem = {
         id: productId,
         details: contentDetails,
-        quantity: 1
+        quantity: 1,
       };
       existingCart[productId] = cartItem;
     }
-    
+
     localStorage.setItem("cart", JSON.stringify(existingCart));
     updateBadge();
     console.log(existingCart);
   }
-  
-  
+
   function createProductDetails(contentDetails) {
     const { title, category, price, description, image } = contentDetails;
 

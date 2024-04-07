@@ -82,6 +82,11 @@ $(document).ready(function () {
       addToWishlist(productId);
     });
 
+    // Add event listener to share button
+    productHTML.find(".shareButton").on("click", function () {
+      shareProductViaEmail(product);
+    });
+
     return productHTML;
   }
 
@@ -109,6 +114,16 @@ $(document).ready(function () {
         $(this).attr("fill", "#ff0000"); // Change color to red
       }
     });
+  }
+
+  function shareProductViaEmail(product) {
+    const subject = encodeURIComponent(
+      `Check out this product: ${product.title}`
+    );
+    const body = encodeURIComponent(
+      `Hey, I found this amazing product:\n\nTitle: ${product.title}\nCategory: ${product.category}\nPrice: Rs ${product.price}\n\nCheck it out here: ${window.location.href}/contentDetails.html?${product.id}`
+    );
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
 
   function filterAndSortProducts() {
