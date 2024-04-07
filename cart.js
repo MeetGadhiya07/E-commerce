@@ -1,9 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
   const cartContainer = document.getElementById("cartContainer");
+  const totalPriceElement = document.querySelector(".total-btn h3");
+  const placeOrderButton = document.getElementById("placeholder-container");
+  const modal = document.getElementById("myModal");
 
   function displayCart(cart) {
     cartContainer.innerHTML = "";
     let totalItems = 0;
+    let totalPrice = 0;
 
     for (const productId in cart) {
       if (cart.hasOwnProperty(productId)) {
@@ -27,13 +31,16 @@ document.addEventListener("DOMContentLoaded", function () {
           const productDetailsDiv = document.createElement("div");
           productDetailsDiv.classList.add("product-details");
 
+          const productTotalPrice = product.details.price * product.quantity;
+          totalPrice += productTotalPrice;
+
           productContentDiv.innerHTML = `
-            <img src="${product.details.image}" alt="${
+            <img  class="cart-img" src="${product.details.image}" alt="${
             product.details.title
           }" />
             <div class="product-details">
               <h3 class="product-title">${product.details.title}</h3>
-              <p class="product-price">${`Price : ${product.details.price}`}</p>
+              <p class="product-total-price">${`Total Price : ${productTotalPrice}`}</p>
               <p class="product-quantity">${`Quantity : ${product.quantity}`}</p>
             </div>
           `;
@@ -63,12 +70,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Display total items count
+ document.getElementById("totalItem").textContent = `Total Items: ${totalItems}`;
+ totalPriceElement.textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+ 
     document.getElementById(
       "totalItem"
     ).textContent = `Total Items: ${totalItems}`;
 
-    // Add event listeners for increase, decrease, and remove buttons
+   
     const increaseButtons = document.querySelectorAll(".increase-button");
     increaseButtons.forEach((button) => {
       button.addEventListener("click", function () {
@@ -115,4 +124,20 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("cart", JSON.stringify(cart));
     displayCart(cart);
   }
+  placeOrderButton.addEventListener("click", function () {
+    modal.style.display = "block";
+  });
+
+  // Close the modal when the close button is clicked
+  const closeButton = document.querySelector(".close");
+  closeButton.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  // Close the modal when user clicks outside the modal
+  window.addEventListener("click", function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  });
 });

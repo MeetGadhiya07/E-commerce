@@ -71,16 +71,18 @@ $(document).ready(function () {
 
     // Check if product is in the wishlist
     const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    if (wishlist.includes(product.id)) {
-      // Change SVG color to indicate it's in the wishlist
-      productHTML.find(".wishlist svg path").attr("fill", "#ff0000");
-    }
+    const isProductInWishlist = wishlist.includes(product.id);
+
+    // Update SVG color to indicate whether product is in the wishlist
+    const wishlistIcons = productHTML.find(".wishlist svg path");
+    wishlistIcons.attr("fill", isProductInWishlist ? "#ff0000" : "#000000");
 
     // Add event listener to wishlist icon
     productHTML.find(".wishlist").on("click", function () {
       const productId = $(this).data("product-id");
       addToWishlist(productId);
     });
+    
 
     // Add event listener to share button
     productHTML.find(".shareButton").on("click", function () {
@@ -93,28 +95,28 @@ $(document).ready(function () {
   // Function to add/remove from wishlist
   function addToWishlist(productId) {
     const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
+  
     const index = wishlist.indexOf(productId);
     if (index === -1) {
       wishlist.push(productId);
     } else {
       wishlist.splice(index, 1);
     }
-
+  
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
-
+  
     // Update the SVG color to indicate addition/removal from wishlist
-    const wishlistIcons = $(
-      '.wishlist[data-product-id="' + productId + '"] svg path'
-    );
+    const wishlistIcons = $(`.wishlist[data-product-id="${productId}"] svg path`);
     wishlistIcons.each(function () {
-      if ($(this).attr("fill") === "#ff0000") {
-        $(this).attr("fill", "#000000"); // Change color back to black
+      // Toggle the color based on whether the product is in the wishlist
+      if (wishlist.includes(productId)) {
+        $(this).attr("fill", "#ff0000"); // Set color to red if in wishlist
       } else {
-        $(this).attr("fill", "#ff0000"); // Change color to red
+        $(this).attr("fill", "#000000"); // Set color to black if not in wishlist
       }
     });
   }
+  
 
   function shareProductViaEmail(product) {
     const subject = encodeURIComponent(

@@ -81,7 +81,9 @@ h2 {
 #brandSelect {
   padding: 10px;
 }
-
+.wishlist{
+  cursor: pointer;
+}
 .product-title {
   padding-top: 3rem;
   padding-bottom: 1.5rem;
@@ -166,6 +168,9 @@ h2 {
   h1 {
     font-size: 25px;
   }
+  #allProducts{
+    grid-template-columns: repeat(4, 1fr);
+  }
   #allProducts,
   #containerAccessories {
     width: 95%;
@@ -220,4 +225,7 @@ h2 {
     width: 80%;
     grid-template-columns: repeat(2, 1fr);
   }
+}
+.shareButton{
+  cursor: pointer;
 }

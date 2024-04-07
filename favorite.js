@@ -12,7 +12,7 @@ async function fetchProductDetails(id) {
   }
 }
 
-function getWishlistItems() {
+async function getWishlistItems() {
   try {
     const wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
     return wishlistItems;
@@ -23,59 +23,63 @@ function getWishlistItems() {
 }
 
 async function loadWishlist() {
-  const wishlistItems = getWishlistItems();
   const cartContainer = document.getElementById("cartContainer");
 
   try {
-    const productPromises = wishlistItems.map(fetchProductDetails);
-    const products = await Promise.all(productPromises);
-
+    const wishlistItems = await getWishlistItems();
     cartContainer.innerHTML = "";
-    products.forEach((productDetails) => {
-      const productListingDiv = document.createElement("div");
-      productListingDiv.classList.add("product-listing");
-
-      const productContentDiv = document.createElement("div");
-      productContentDiv.classList.add("product-content");
-
-      const productId = productDetails.id;
-
-      productContentDiv.innerHTML = `
-      <div class="product-11">
-        <img src="${productDetails.image}" alt="${productDetails.title}" />
-        <div class="product-details">
-          <h3 class="product-title">${productDetails.title}</h3>
-          <p class="product-price">${productDetails.price}</p>
-          <p class="product-description">${productDetails.description}</p>
-        </div>
-      </div>
-      <div  class="remove-btn-group">
-        <button class="remove-button" data-product-id="${productId}">
-          Remove
-        </button>
-      </div>
-      `;
-
-      productListingDiv.appendChild(productContentDiv);
-      cartContainer.appendChild(productListingDiv);
-    });
-
-    document.querySelectorAll(".remove-button").forEach((button) => {
-      button.addEventListener("click", removeFromWishlist);
-    });
+    for (const productId of wishlistItems) {
+      const productDetails = await fetchProductDetails(productId);
+      renderProduct(productDetails);
+    }
   } catch (error) {
     console.error("Error loading wishlist:", error);
   }
 }
 
-function removeFromWishlist(event) {
-  const productId = String(event.target.dataset.productId);
+function renderProduct(productDetails) {
+  const cartContainer = document.getElementById("cartContainer");
 
-  let wishlistItems = getWishlistItems();
+  const productListingDiv = document.createElement("div");
+  productListingDiv.classList.add("product-listing");
+
+  const productContentDiv = document.createElement("div");
+  productContentDiv.classList.add("product-content");
+
+  productContentDiv.innerHTML = `
+    <div class="product-11">
+      <img src="${productDetails.image}" alt="${productDetails.title}" />
+      <div class="product-details">
+        <h3 class="product-title">${productDetails.title}</h3>
+        <p class="product-price">${productDetails.price}</p>
+        <p class="product-description">${productDetails.description}</p>
+      </div>
+    </div>
+    <div class="remove-btn-group">
+      <button class="remove-button" data-product-id="${productDetails.id}">
+        Remove
+      </button>
+    </div>
+  `;
+
+  productListingDiv.appendChild(productContentDiv);
+  cartContainer.appendChild(productListingDiv);
+
+  const removeButton = productContentDiv.querySelector(".remove-button");
+  removeButton.addEventListener("click", removeFromWishlist);
+}
+
+function removeFromWishlist(event) {
+  const productId = event.target.dataset.productId;
+  let wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
   wishlistItems = wishlistItems.filter((item) => item !== productId);
   localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
-
-  loadWishlist();
+  
+  // Remove the product listing from the DOM
+  const productListing = event.target.closest('.product-listing');
+  if (productListing) {
+    productListing.remove();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", loadWishlist);
