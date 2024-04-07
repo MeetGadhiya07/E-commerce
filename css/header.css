@@ -68,6 +68,16 @@ body {
   align-items: center;
   gap: 25px;
 }
+a {
+  text-decoration: none;
+}
+
+.favorite {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
 .addedToCart {
   font-size: 1.5em;

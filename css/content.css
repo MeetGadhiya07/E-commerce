@@ -13,6 +13,7 @@ body {
 }
 
 #box {
+  position: relative;
   width: 100%;
   background-color: white;
   align-content: center;
@@ -22,6 +23,27 @@ body {
 #box:hover {
   box-shadow: 1px 6px 3px 0 rgb(185, 185, 185);
 }
+
+.like-container {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.shareButton {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.wishlist {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
 #allProducts img {
   width: 100%;
   border-top-left-radius: 10px;
